@@ -661,6 +661,7 @@ a { color: inherit; text-decoration: none; }
    Try ?now=2026-12-04T13:30 (London time) to see any moment, e.g. a winter Friday.
    ========================================================================== */
 const BRANCHES = HOURS.branches;
+const escHtml = HOURS.esc;
 const statusFor = key => HOURS.status(key);
 
 /* ---------- Widget + order button ---------- */
@@ -675,7 +676,7 @@ function render(animate) {
   const paint = () => {
     document.dispatchEvent(new CustomEvent('statuschange', { detail: st }));
     statusBox.dataset.open = st.open;
-    statusText.innerHTML = `<span class="status__title">${st.title}</span><span class="status__detail">${st.detail}</span>`;
+    statusText.innerHTML = `<span class="status__title">${escHtml(st.title)}</span><span class="status__detail">${escHtml(st.detail)}</span>`;
     orderLinks.forEach(a => {
       const closed = !st.open;
       a.setAttribute('aria-disabled', closed);
@@ -718,7 +719,7 @@ function renderHours() {
       <dl>${HOURS.upcoming(k, 7).map((x, i) => {
         const w = x.w, times = !w || w.closed ? 'Closed' : `${HOURS.fmt(w.open)} to ${HOURS.fmt(w.close)}`;
         const sub = w && w.note ? w.note : x.dow === 5 && w && w.z ? `Candle lighting ${HOURS.fmt(w.z.candle)}` : x.dow === 6 && w && w.z ? `Shabbat ends ${HOURS.fmt(w.z.havdalah)}` : '';
-        return `<dt class="${i === 0 ? 'today' : ''}">${i === 0 ? 'Today' : x.label}${sub ? `<small>${sub}</small>` : ''}</dt><dd class="${i === 0 ? 'today' : ''}">${times}</dd>`;
+        return `<dt class="${i === 0 ? 'today' : ''}">${i === 0 ? 'Today' : x.label}${sub ? `<small>${escHtml(sub)}</small>` : ''}</dt><dd class="${i === 0 ? 'today' : ''}">${times}</dd>`;
       }).join('')}</dl>
     </div>`).join('');
   document.getElementById('hours-note').textContent =
@@ -757,7 +758,7 @@ window.addEventListener('storage', () => { renderHours(); render(false); });
     : it.price == null ? '' : `<span class="price">${it.from ? '<small>from</small>' : ''}${money(it.price)}</span>`;
   const actionHTML = it => {
     const dis = status.open ? '' : ' aria-disabled="true"';
-    if (it.sched) return `<span class="off">${it.sched}</span>`;
+    if (it.sched) return `<span class="off">${escHtml(it.sched)}</span>`;
     if (it.off) return '<span class="off">Unavailable today</span>';
     if (it.choose) return `<button type="button" class="btn btn--glass btn--sm" data-choose="${it.id}"${dis}>Choose</button>`;
     return `<button type="button" class="add" data-add="${it.id}"${dis} aria-label="Add ${it.name}, ${money(it.price)}">+</button>`;
@@ -948,7 +949,9 @@ window.addEventListener('storage', () => { renderHours(); render(false); });
     document.body.classList.toggle('has-chip', !!d);
     if (!d) return;
     $('chip-sign').textContent = d.days.length < 7 ? 'Today' : 'Deal';
-    $('chip-text').innerHTML = `<strong>${d.name}</strong>${d.chip}`;
+    const t = $('chip-text'), strong = document.createElement('strong');
+    strong.textContent = d.name;
+    t.replaceChildren(strong, document.createTextNode(d.chip));
     chip.dataset.deal = d.id;
   }
   $('chip-x').addEventListener('click', () => {

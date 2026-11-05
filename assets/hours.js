@@ -24,6 +24,8 @@ const HOURS = (() => {
     edgware: { name: 'Edgware', address: '7 Edgwarebury Lane, HA8 8LH', lat: 51.6148, lon: -0.2726 }
   };
 
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const isDate = v => /^\d{4}-\d{2}-\d{2}$/.test(v), isTime = v => /^([01]\d|2[0-3]):[0-5]\d$/.test(v);
   const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
   const pad = n => String(n).padStart(2, '0');
   const fmt = min => { min = Math.round(min); return pad(Math.floor(min / 60) % 24) + ':' + pad(((min % 60) + 60) % 60); };
@@ -52,7 +54,13 @@ const HOURS = (() => {
     const d = defaults();
     try {
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if (saved) for (const b of Object.keys(d)) if (saved[b]) d[b] = { ...d[b], ...saved[b] };
+      if (saved) for (const b of Object.keys(d)) if (saved[b]) {
+        const s = saved[b];
+        d[b] = { ...d[b], ...s };
+        // keep only well-formed special days, so stored text can never become markup or break the maths
+        d[b].overrides = (Array.isArray(s.overrides) ? s.overrides : []).filter(o => o && isDate(o.from) && (!o.to || isDate(o.to)) && (o.type === 'closed' || (o.type === 'custom' && isTime(o.open) && isTime(o.close))))
+          .map(o => ({ id: String(o.id || '').replace(/\W/g, ''), from: o.from, to: o.to || '', type: o.type, open: o.open, close: o.close, note: String(o.note || '').slice(0, 60) }));
+      }
     } catch (e) { /* private mode: fall back to defaults */ }
     return d;
   }
@@ -164,5 +172,5 @@ const HOURS = (() => {
     return Array.from({ length: n }, (_, i) => { const dt = addDays(now.y, now.m, now.d, i); return { ...dt, label: label(dt), w: dayWindow(bkey, dt, cfgAll) }; });
   }
 
-  return { branches, DAYS, SHORT, defaults, load, save, reset, nowLondon, londonParts, addDays, zmanim, dayWindow, status, upcoming, fmt, toMin };
+  return { esc, branches, DAYS, SHORT, defaults, load, save, reset, nowLondon, londonParts, addDays, zmanim, dayWindow, status, upcoming, fmt, toMin };
 })();

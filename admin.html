@@ -244,9 +244,9 @@ select { appearance: none; padding-right: 16px; }
     $('sat-hint').textContent = `Saturday ${sat.d}: Shabbat ends ${HOURS.fmt(s.z.havdalah)}, so orders ${s.closed ? 'stay off (' + (s.note || 'closed').toLowerCase() + ')' : `${HOURS.fmt(s.open)} to ${HOURS.fmt(s.close)}`}.`;
 
     $('slist').innerHTML = c.overrides.length ? [...c.overrides].sort((a, b) => a.from.localeCompare(b.from)).map(o => `
-      <li><div><strong>${o.from}${o.to && o.to !== o.from ? ' to ' + o.to : ''}</strong>
-        <small>${o.type === 'closed' ? 'Closed all day' : `Open ${o.open} to ${o.close}`}${o.note ? ' · ' + esc(o.note) : ''}</small></div>
-        <button class="btn btn--quiet" type="button" data-remove="${o.id}" aria-label="Remove ${o.from}">Remove</button></li>`).join('')
+      <li><div><strong>${esc(o.from)}${o.to && o.to !== o.from ? ' to ' + esc(o.to) : ''}</strong>
+        <small>${o.type === 'closed' ? 'Closed all day' : `Open ${esc(o.open)} to ${esc(o.close)}`}${o.note ? ' · ' + esc(o.note) : ''}</small></div>
+        <button class="btn btn--quiet" type="button" data-remove="${esc(o.id)}" aria-label="Remove ${esc(o.from)}">Remove</button></li>`).join('')
       : '<li class="empty" style="background:none;padding:0">No special days yet.</li>';
 
     const days = HOURS.upcoming(br, 14);

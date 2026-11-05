@@ -24,11 +24,23 @@ const DEALS = (() => {
       base('Tuesday half price', 'Tuesday half price', { days: [2], branches: ['edgware'], mode: 'delivery', chip: 'Buy one, get one half price on delivery', showChip: true })
     ];
   }
+  /* Stored values come from the browser, so keep only the shapes we expect */
+  function clean(v, fallback) {
+    const date = t => /^\d{4}-\d{2}-\d{2}$/.test(t) ? t : '';
+    return {
+      id: fallback.id, name: fallback.name, enabled: v.enabled !== false,
+      days: Array.isArray(v.days) ? [...new Set(v.days.map(Number).filter(n => Number.isInteger(n) && n >= 0 && n <= 6))] : fallback.days,
+      branches: Array.isArray(v.branches) ? v.branches.filter(b => BOTH.includes(b)) : fallback.branches,
+      mode: ['both', 'collection', 'delivery'].includes(v.mode) ? v.mode : 'both',
+      from: date(v.from), to: date(v.to),
+      chip: String(v.chip ?? '').slice(0, 70), showChip: !!v.showChip
+    };
+  }
   function load() {
     const d = defaults();
     try {
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if (Array.isArray(saved)) return d.map(x => ({ ...x, ...(saved.find(s => s.id === x.id) || {}) }));
+      if (Array.isArray(saved)) return d.map(x => clean({ ...x, ...(saved.find(s => s.id === x.id) || {}) }, x));
     } catch (e) { /* private mode: use defaults */ }
     return d;
   }
