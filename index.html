@@ -16,7 +16,12 @@
    Shape rule: interactive = full pill, panels = 28px. Nothing else.
    Layers: nav 40, widget 30, hero copy 20, pizza 10. (no stray z-index)
    ========================================================================== */
+@font-face { font-family: "Barlow Condensed"; font-weight: 700; font-display: swap; src: url(assets/fonts/barlow-condensed-700.woff2) format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-weight: 800; font-display: swap; src: url(assets/fonts/barlow-condensed-800.woff2) format("woff2"); }
 :root {
+  --display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;   /* street-sign headings */
+  --paper: #efede6; --paper-ink: #1b1b18;                                                /* receipt */
+  --radius-sign: 6px;                                                                    /* small rectangular signs and tags */
   --ink: #0f0f0e;          /* page */
   --ink-2: #181816;        /* raised surface */
   --line: rgb(255 255 255 / .12);
@@ -122,8 +127,8 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Hero copy ---------- */
 .copy { position: relative; z-index: 20; }
 .headline {
-  margin: 0 0 20px; font-weight: 700; font-size: clamp(2.4rem, 6.4vw, 6.25rem);
-  line-height: .98; letter-spacing: -.048em; white-space: nowrap;
+  margin: 0 0 20px; font-family: var(--display); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(3rem, 8vw, 7rem); line-height: .9; letter-spacing: .005em; white-space: nowrap;
 }
 .headline .line { display: block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
 .headline .line > span { display: block; }
@@ -175,7 +180,7 @@ a { color: inherit; text-decoration: none; }
 .menu { padding: clamp(64px, 10vw, 128px) clamp(20px, 5vw, 72px) clamp(56px, 8vw, 104px); }
 .menu__inner { max-width: 1200px; margin-inline: auto; }
 .menu__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 36px; }
-.menu h2 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.5rem); line-height: 1; letter-spacing: -.045em; font-weight: 700; }
+.menu h2 { margin: 0; font-family: var(--display); text-transform: uppercase; font-size: clamp(3rem, 7vw, 5.5rem); line-height: .92; letter-spacing: .005em; font-weight: 800; }
 .menu__tools { display: flex; flex-wrap: wrap; gap: 20px; }
 .field { display: grid; gap: 8px; }
 .field__label { font-size: .875rem; font-weight: 500; color: var(--text-dim); }
@@ -209,7 +214,7 @@ a { color: inherit; text-decoration: none; }
 }
 .cat { padding-top: 64px; scroll-margin-top: 24px; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-.cat h3 { margin: 0 0 20px; font-size: clamp(1.75rem, 3.2vw, 2.5rem); letter-spacing: -.035em; line-height: 1.05; }
+.cat h3 { margin: 0 0 20px; font-family: var(--display); text-transform: uppercase; font-weight: 800; font-size: clamp(2.1rem, 4vw, 3.1rem); letter-spacing: .01em; line-height: 1; }
 .is-swapping-menu { opacity: 0; transition: opacity .15s; }
 #menu-body { transition: opacity .25s; }
 
@@ -221,9 +226,9 @@ a { color: inherit; text-decoration: none; }
   border-radius: var(--radius-panel); background: var(--ink-2); border: 1px solid var(--line);
 }
 .deal--hot { background: var(--yellow); color: var(--yellow-ink); border-color: transparent; }
-.deal__tag { align-self: start; padding: 6px 12px; border-radius: 999px; font-size: .8125rem; font-weight: 700; background: rgb(255 255 255 / .1); }
+.deal__tag { align-self: start; padding: 5px 10px; border-radius: var(--radius-sign); font-family: var(--display); text-transform: uppercase; letter-spacing: .04em; font-size: 1rem; font-weight: 700; background: rgb(255 255 255 / .12); }
 .deal--hot .deal__tag { background: rgb(26 21 0 / .12); }
-.deal h4 { margin: 0 0 8px; font-size: 1.5rem; letter-spacing: -.03em; line-height: 1.1; }
+.deal h4 { margin: 0 0 8px; font-family: var(--display); text-transform: uppercase; font-weight: 800; font-size: 1.875rem; letter-spacing: .01em; line-height: 1; }
 .deal p { margin: 0; color: var(--text-dim); font-size: .9375rem; }
 .deal--hot p { color: rgb(26 21 0 / .78); }
 .deal__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -273,17 +278,43 @@ a { color: inherit; text-decoration: none; }
 .drawer h2 { margin: 0; font-size: 1.625rem; letter-spacing: -.03em; }
 .drawer__branch { margin: 2px 0 0; color: var(--text-dim); font-size: .9375rem; }
 .drawer__body { flex: 1; overflow-y: auto; padding: 8px 22px; }
-.bline { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: center; padding: 14px 0; }
-.bline__name { font-weight: 600; }
-.bline__unit { color: var(--text-dim); font-size: .9375rem; }
 .step { display: inline-flex; align-items: center; border-radius: 999px; background: rgb(255 255 255 / .08); box-shadow: inset 0 0 0 1px var(--line); }
 .step button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; color: var(--text); font: 500 1.25rem/1 var(--font); cursor: pointer; }
 .step button:active { transform: scale(.9); }
 .step output { min-width: 22px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
-.drawer__empty { padding: 56px 8px; text-align: center; color: var(--text-dim); }
+.receipt {
+  position: relative; margin: 14px 0 26px; padding: 22px 20px 26px; color: var(--paper-ink); background: var(--paper);
+  font: 400 .875rem/1.45 ui-monospace, "SF Mono", Menlo, Consolas, monospace; box-shadow: 0 18px 40px rgb(0 0 0 / .35);
+}
+.receipt::before, .receipt::after {                       /* torn zigzag edges */
+  content: ""; position: absolute; left: 0; right: 0; height: 8px;
+  background: linear-gradient(-45deg, transparent 6px, var(--paper) 0) 0 0 / 12px 8px, linear-gradient(45deg, transparent 6px, var(--paper) 0) 0 0 / 12px 8px;
+}
+.receipt::before { top: -8px; transform: scaleY(-1); }
+.receipt::after { bottom: -8px; }
+.receipt__head { display: grid; justify-items: center; gap: 1px; text-align: center; }
+.receipt__head strong { font-family: var(--display); font-weight: 800; font-size: 1.875rem; line-height: 1; letter-spacing: .02em; }
+.rule { margin: 14px 0; border-top: 2px dashed rgb(27 27 24 / .4); }
+.rl { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 8px 0; }
+.rl__name { font-weight: 700; }
+.rl__name small { display: block; font-weight: 400; opacity: .72; }
+.rl__price { font-weight: 700; font-variant-numeric: tabular-nums; }
+.receipt .step { background: none; box-shadow: inset 0 0 0 1.5px rgb(27 27 24 / .45); }
+.receipt .step button { width: 36px; height: 36px; color: var(--paper-ink); }
+.receipt .step output { min-width: 18px; }
+.rtot { display: flex; align-items: baseline; justify-content: space-between; }
+.rtot span { font-family: var(--display); font-weight: 800; font-size: 1.5rem; letter-spacing: .03em; }
+.rtot strong { font-size: 1.375rem; font-variant-numeric: tabular-nums; }
+.receipt__empty { margin: 4px 0 0; text-align: center; font-weight: 700; }
+.receipt__hint { margin: 2px 0 8px; text-align: center; opacity: .72; }
+.receipt__foot { margin: 16px 0 0; text-align: center; opacity: .72; }
+
+/* a gentle suggestion under the receipt, one at a time, easy to wave away */
+.nudge { padding: 16px 18px; border-radius: 20px; background: rgb(255 255 255 / .07); border: 1px solid var(--line); }
+.nudge p { margin: 0 0 12px; font-size: .9375rem; }
+.nudge__row { display: flex; flex-wrap: wrap; gap: 8px; }
+.nudge .btn { height: 40px; padding: 0 16px; font-size: .875rem; }
 .drawer__foot { padding: 18px 22px 22px; border-top: 1px solid var(--line); }
-.drawer__total { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; font-size: 1.0625rem; }
-.drawer__total strong { font-size: 1.5rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .drawer__foot .btn { width: 100%; }
 .drawer__foot .btn[aria-disabled="true"] { cursor: not-allowed; }
 
@@ -297,14 +328,29 @@ a { color: inherit; text-decoration: none; }
 [popover].toast:popover-open { opacity: 1; transform: none; }
 @starting-style { [popover].toast:popover-open { opacity: 0; transform: translateY(12px); } }
 
+/* check strip, used twice, like the tile border of a slice shop */
+.checks { height: 22px; background: repeating-conic-gradient(rgb(255 255 255 / .16) 0 25%, transparent 0 50%) 0 0 / 22px 22px; }
+
+/* folded slice photo: appears only when Eli's photo exists at assets/hero-slice.jpg */
+.slice { display: none; margin: 0; }
+.has-slice .pizza { display: none; }
+.has-slice .stage::before { opacity: .7; }
+.has-slice .slice {
+  display: block; position: absolute; z-index: 10; overflow: hidden; border-radius: var(--radius-panel);
+  right: clamp(20px, 5vw, 72px); top: calc(var(--nav-h) + 36px); bottom: clamp(28px, 6vh, 64px); width: min(38vw, 560px);
+  box-shadow: 0 40px 80px rgb(0 0 0 / .5);
+}
+.slice img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 767px) { .has-slice .slice { left: 20px; right: 20px; width: auto; bottom: auto; height: 38dvh; } }
+
 /* ---------- Below the hero: opening hours ---------- */
 .hours { padding: clamp(72px, 12vw, 160px) clamp(20px, 5vw, 72px); background: var(--ink-2); }
 .hours__inner { max-width: 1100px; margin-inline: auto; }
-.hours h2 { margin: 0 0 40px; font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.02; letter-spacing: -.04em; font-weight: 700; }
+.hours h2 { margin: 0 0 40px; font-family: var(--display); text-transform: uppercase; font-size: clamp(2.6rem, 6vw, 4.75rem); line-height: .92; letter-spacing: .005em; font-weight: 800; }
 .hours__grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 @media (min-width: 768px) { .hours__grid { grid-template-columns: 1.15fr 1fr; } }
 .branch { padding: clamp(22px, 3vw, 36px); border-radius: var(--radius-panel); background: var(--ink); border: 1px solid var(--line); }
-.branch h3 { margin: 0 0 4px; font-size: 1.5rem; letter-spacing: -.025em; }
+.branch h3 { margin: 0 0 4px; font-family: var(--display); text-transform: uppercase; font-weight: 800; font-size: 2rem; letter-spacing: .01em; line-height: 1; }
 .branch address { font-style: normal; color: var(--text-dim); margin-bottom: 20px; }
 .branch dl { display: grid; grid-template-columns: auto 1fr; gap: 10px 24px; margin: 0; }
 .branch dt { color: var(--text-dim); }
@@ -350,7 +396,7 @@ a { color: inherit; text-decoration: none; }
   .stage { min-height: 720px; padding-bottom: 20px; }
   .pizza { --size: min(88vw, 42dvh); right: calc(var(--size) * -.16); top: calc(var(--nav-h) + 40px); translate: 0 0; }
   .stage::before { top: 22%; width: 120vw; height: 120vw; right: -30vw; }
-  .headline { font-size: clamp(2rem, 11vw, 3.4rem); }
+  .headline { font-size: clamp(2.7rem, 15.5vw, 4.9rem); }
   .widget { position: relative; inset: auto; width: 100%; margin-top: 24px; z-index: 30; }
   .copy { max-width: none; }
   .stage { display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; }
@@ -405,6 +451,10 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
+      <figure class="slice">
+        <img src="assets/hero-slice.jpg" alt="A slice of New York pizza being folded" onload="this.closest('.stage').classList.add('has-slice')" onerror="this.closest('figure').remove()">
+      </figure>
+
       <div class="copy">
         <h1 class="headline" id="hero-title">
           <span class="line"><span>New York pizza,</span></span>
@@ -435,6 +485,7 @@ a { color: inherit; text-decoration: none; }
     </div>
   </section>
 
+  <div class="checks" aria-hidden="true"></div>
   <section class="menu" id="menu" aria-labelledby="menu-title">
     <div class="menu__inner">
       <header class="menu__head">
@@ -466,6 +517,7 @@ a { color: inherit; text-decoration: none; }
     </div>
   </section>
 
+  <div class="checks" aria-hidden="true"></div>
   <section class="hours" id="hours" aria-labelledby="hours-title">
     <div class="hours__inner">
       <h2 id="hours-title">Two kitchens, one menu.</h2>
@@ -485,7 +537,6 @@ a { color: inherit; text-decoration: none; }
   </div>
   <div class="drawer__body" id="drawer-body"></div>
   <div class="drawer__foot">
-    <div class="drawer__total"><span>Subtotal</span><strong id="drawer-total">£0.00</strong></div>
     <button type="button" class="btn btn--yellow" id="checkout-btn">Go to checkout</button>
   </div>
 </dialog>
@@ -740,23 +791,53 @@ window.addEventListener('storage', () => { renderHours(); render(false); });
 
   /* Basket */
   const cart = () => baskets[current];
+  const dismissed = new Set();
+  const SIDE_CATS = ['starters', 'poppers', 'chips', 'fish'];
+  function nudgeFor(lines) {
+    if (!lines.length) return null;
+    const qtyIn = cats => lines.filter(l => cats.includes(l.it.cat)).reduce((n, l) => n + l.qty, 0);
+    const sides = qtyIn(SIDE_CATS), hasDip = qtyIn(['dips']) > 0, hasDrink = qtyIn(['drinks']) > 0;
+    const hasFamily = lines.some(l => l.it.id === 'deals:Family pizza deal');
+    const family = byIdAny('deals:Family pizza deal');
+    if (sides >= 2 && !hasFamily && family && !family.off && !dismissed.has('family'))
+      return { key: 'family', text: `Two sides in your basket. The family pizza deal covers any 2 large pizzas and any 2 sides for ${money(family.price)}.`, go: ['See the deal', '#cat-deals'] };
+    if (sides > 0 && !hasDip && !dismissed.has('dip')) {
+      const dip = byIdAny('dips:Garlic dip');
+      if (dip && !dip.off) return { key: 'dip', text: `Garlic dip with that? ${money(dip.price)}.`, add: ['Add a garlic dip', 'dips:Garlic dip'] };
+    }
+    if (!hasDrink && !dismissed.has('drink')) return { key: 'drink', text: 'Need a drink with that?', go: ['See drinks', '#cat-drinks'] };
+    return null;
+  }
   function renderBasket() {
     const lines = [...cart()].map(([id, qty]) => ({ it: byIdAny(id), qty })).filter(l => l.it);
     const count = lines.reduce((n, l) => n + l.qty, 0);
     const total = lines.reduce((n, l) => n + l.qty * l.it.price, 0);
     badge.hidden = !count; badge.textContent = count;
     $('drawer-branch').textContent = BRANCHES[current].name;
-    $('drawer-total').textContent = money(total);
-    $('drawer-body').innerHTML = lines.length ? lines.map(({ it, qty }) => `
-      <div class="bline">
-        <div><div class="bline__name">${it.name}</div><div class="bline__unit">${money(it.price)} each</div></div>
-        <div class="step" role="group" aria-label="Quantity of ${it.name}">
-          <button type="button" data-step="${it.id}" data-by="-1" aria-label="Remove one ${it.name}">−</button>
-          <output>${qty}</output>
-          <button type="button" data-step="${it.id}" data-by="1" aria-label="Add one ${it.name}">+</button>
-        </div>
-      </div>`).join('')
-      : '<p class="drawer__empty">Your basket is empty. Add something from the menu.</p>';
+    const br = BRANCHES[current];
+    const when = new Date().toLocaleString('en-GB', { timeZone: 'Europe/London', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const n = nudgeFor(lines);
+    $('drawer-body').innerHTML = `
+      <div class="receipt">
+        <div class="receipt__head"><strong>ELI’S PIZZA</strong><span>${br.name}</span><span>${br.address}</span><span>${when}</span></div>
+        <div class="rule"></div>
+        ${lines.length ? lines.map(({ it, qty }) => `
+          <div class="rl">
+            <div class="step" role="group" aria-label="Quantity of ${it.name}">
+              <button type="button" data-step="${it.id}" data-by="-1" aria-label="Remove one ${it.name}">−</button>
+              <output>${qty}</output>
+              <button type="button" data-step="${it.id}" data-by="1" aria-label="Add one ${it.name}">+</button>
+            </div>
+            <div class="rl__name">${it.name}<small>${money(it.price)} each</small></div>
+            <span class="rl__price">${money(qty * it.price)}</span>
+          </div>`).join('') : '<p class="receipt__empty">NO ITEMS YET</p><p class="receipt__hint">Add something from the menu.</p>'}
+        <div class="rule"></div>
+        <div class="rtot"><span>TOTAL</span><strong id="drawer-total">${money(total)}</strong></div>
+        <p class="receipt__foot">Thank you for your order</p>
+      </div>
+      ${n ? `<div class="nudge" role="note"><p>${n.text}</p><div class="nudge__row">
+        ${n.add ? `<button type="button" class="btn btn--yellow" data-nudge-add="${n.add[1]}">${n.add[0]}</button>` : `<button type="button" class="btn btn--yellow" data-nudge-go="${n.go[1]}">${n.go[0]}</button>`}
+        <button type="button" class="btn btn--quiet" data-nudge-skip="${n.key}">Not now</button></div></div>` : ''}`;
     const co = $('checkout-btn');
     co.setAttribute('aria-disabled', !status.open || !lines.length);
     co.textContent = !status.open ? `Opens ${status.short}` : 'Go to checkout';
@@ -775,6 +856,10 @@ window.addEventListener('storage', () => { renderHours(); render(false); });
     toast(`Added ${it.name}`);
   });
   $('drawer-body').addEventListener('click', e => {
+    const sk = e.target.closest('[data-nudge-skip]'), ad = e.target.closest('[data-nudge-add]'), go = e.target.closest('[data-nudge-go]');
+    if (sk) { dismissed.add(sk.dataset.nudgeSkip); return renderBasket(); }
+    if (ad) { const id = ad.dataset.nudgeAdd; cart().set(id, (cart().get(id) || 0) + 1); return renderBasket(); }
+    if (go) { drawer.close(); document.querySelector(go.dataset.nudgeGo)?.scrollIntoView(); return; }
     const b = e.target.closest('[data-step]'); if (!b) return;
     const q = (cart().get(b.dataset.step) || 0) + Number(b.dataset.by);
     q > 0 ? cart().set(b.dataset.step, q) : cart().delete(b.dataset.step);
