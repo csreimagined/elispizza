@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex, nofollow">
+<title>Opening hours | Eli's Pizza admin (mock)</title>
+<style>
+:root {
+  --ink: #0f0f0e; --ink-2: #181816; --line: rgb(255 255 255 / .12);
+  --text: #f4f3ee; --text-dim: #b9b8b0; --yellow: #ffd60a; --yellow-ink: #1a1500;
+  --radius-panel: 28px;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --spring: linear(0, 0.0658, 0.2149, 0.3929, 0.5659, 0.7152, 0.8333, 0.9197, 0.9779, 1.0133, 1.0316, 1.0381, 1.0372, 1.0322, 1.0255, 1.0187, 1.0126, 1.0077, 1.004, 1.0015, 0.9998, 0.999, 0.9986, 0.9985, 0.9987, 0.9989, 0.9992, 0.9994, 0.9996, 0.9998, 0.9999, 1, 1, 1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { color-scheme: dark; }
+body { margin: 0; background: var(--ink); color: var(--text); font: 400 1rem/1.5 var(--font); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; border-radius: 12px; }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: 980px; margin: 0 auto; padding: 20px 20px 0; }
+.top img { height: 44px; display: block; }
+.btn { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--line); cursor: pointer; white-space: nowrap;
+  background: rgb(255 255 255 / .1); color: var(--text); font: 600 .9375rem/1 var(--font); text-decoration: none; transition: transform .12s ease-out, background-color .2s; }
+.btn:hover { background: rgb(255 255 255 / .16); }
+.btn:active { transform: scale(.97); }
+.btn--yellow { background: var(--yellow); color: var(--yellow-ink); border-color: transparent; }
+.btn--yellow:hover { background: #ffe14d; }
+.btn--quiet { background: none; }
+
+main { max-width: 980px; margin: 0 auto; padding: 24px 20px 96px; }
+h1 { margin: 24px 0 8px; font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.02; letter-spacing: -.045em; }
+h2 { margin: 0 0 4px; font-size: 1.5rem; letter-spacing: -.03em; }
+.lead { margin: 0; color: var(--text-dim); max-width: 46rem; }
+.mock { margin: 20px 0 0; padding: 14px 20px; border-radius: var(--radius-panel); background: rgb(255 214 10 / .1); border: 1px solid rgb(255 214 10 / .35); font-size: .9375rem; }
+.panel { margin-top: 20px; padding: clamp(20px, 3vw, 32px); border-radius: var(--radius-panel); background: var(--ink-2); border: 1px solid var(--line); }
+.panel > p { margin: 0 0 20px; color: var(--text-dim); font-size: .9375rem; }
+
+.seg { position: relative; display: grid; grid-template-columns: 1fr 1fr; width: 320px; max-width: 100%; padding: 4px; border-radius: 999px; background: rgb(0 0 0 / .35); box-shadow: inset 0 0 0 1px var(--line); }
+.seg__thumb { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); border-radius: 999px; background: rgb(255 255 255 / .16); box-shadow: inset 0 1px 0 rgb(255 255 255 / .18); transition: translate .55s var(--spring); }
+.seg[data-branch="edgware"] .seg__thumb { translate: 100% 0; }
+.seg button { position: relative; height: 40px; border: 0; background: none; cursor: pointer; border-radius: 999px; font: 600 .9375rem/1 var(--font); color: var(--text-dim); }
+.seg button[aria-checked="true"] { color: var(--text); }
+
+.now { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.lamp { display: inline-block; width: 10px; height: 10px; margin-right: 10px; border-radius: 50%; background: #6b6a63; }
+.now[data-open="true"] .lamp { background: #34d058; box-shadow: 0 0 0 4px rgb(52 208 88 / .18); }
+.now__title { font-size: 1.25rem; font-weight: 600; letter-spacing: -.02em; }
+.now__detail { margin: 2px 0 0 20px; color: var(--text-dim); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.grid { display: grid; grid-template-columns: 8.5rem 1fr 1fr 1.4fr; gap: 12px 16px; align-items: center; }
+.grid .head { font-size: .875rem; color: var(--text-dim); font-weight: 500; }
+.grid .day { font-weight: 600; }
+@media (max-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } .grid .head { display: none; } .grid .day { grid-column: 1 / -1; margin-top: 12px; } .grid .check { grid-column: 1 / -1; } }
+.field { display: grid; gap: 8px; }
+.field > span, .field > label { font-size: .875rem; color: var(--text-dim); font-weight: 500; }
+input[type="time"], input[type="date"], input[type="number"], input[type="text"], select {
+  width: 100%; min-width: 0; height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: rgb(255 255 255 / .06); color: var(--text); font: 400 1rem/1 var(--font);
+}
+input[type="number"] { max-width: 120px; font-variant-numeric: tabular-nums; }
+select { appearance: none; padding-right: 16px; }
+.check { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; color: var(--text-dim); }
+.check input { width: 20px; height: 20px; accent-color: var(--yellow); }
+.rules { display: grid; gap: 24px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .rules { grid-template-columns: 1fr 1fr; } }
+.rules h3 { margin: 0 0 12px; font-size: 1.125rem; letter-spacing: -.02em; }
+.inline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; color: var(--text-dim); }
+.inline input[type="time"] { width: 150px; }
+.hint { margin: 0; font-size: .875rem; color: var(--text-dim); }
+
+.special { display: grid; gap: 14px 16px; grid-template-columns: 1fr 1fr; align-items: end; }
+@media (min-width: 760px) { .special { grid-template-columns: 1fr 1fr 1.2fr 1fr 1fr; } .special .wide { grid-column: 1 / -1; } }
+.slist { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 10px; }
+.slist li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; border-radius: 20px; background: rgb(255 255 255 / .05); }
+.slist small { display: block; color: var(--text-dim); }
+.empty { color: var(--text-dim); margin: 24px 0 0; }
+
+.preview { display: grid; grid-template-columns: 1fr; column-gap: 48px; }
+@media (min-width: 760px) { .preview { grid-template-columns: 1fr 1fr; } }
+.pv { display: grid; grid-template-columns: 7.5rem 1fr; gap: 2px 16px; padding: 10px 0; }
+.pv b { font-variant-numeric: tabular-nums; }
+.pv .when { font-weight: 600; }
+.pv .when.today { color: var(--yellow); }
+.pv small { grid-column: 2; color: var(--text-dim); }
+.saved { position: fixed; left: 50%; bottom: 24px; translate: -50% 0; padding: 12px 20px; border-radius: 999px; background: rgb(36 36 33 / .9); border: 1px solid var(--line); font-weight: 500; opacity: 0; transform: translateY(10px); transition: opacity .25s, transform .4s var(--spring); pointer-events: none; }
+.saved.on { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <img src="assets/logo.png" alt="Eli's Pizza" width="62" height="44">
+  <a class="btn btn--quiet" href="index.html">View the site</a>
+</header>
+
+<main>
+  <h1>Opening hours</h1>
+  <p class="lead">Set when each branch takes orders. The website shows these times and switches ordering off the moment a branch closes.</p>
+  <p class="mock">Mock. Changes save in this browser only, so you can try everything and see it on the site in the next tab. The real build saves to the database, so the website and both kitchens update straight away.</p>
+
+  <div class="panel">
+    <div class="seg" id="seg" role="radiogroup" aria-label="Choose a branch" data-branch="gg">
+      <span class="seg__thumb" aria-hidden="true"></span>
+      <button type="button" role="radio" aria-checked="true" data-branch="gg">Golders Green</button>
+      <button type="button" role="radio" aria-checked="false" data-branch="edgware">Edgware</button>
+    </div>
+  </div>
+
+  <section class="panel" aria-labelledby="now-title">
+    <div class="now" id="now" data-open="false">
+      <div>
+        <h2 id="now-title" class="sr" hidden>Right now</h2>
+        <div class="now__title"><span class="lamp" aria-hidden="true"></span><span id="now-title-text"></span></div>
+        <p class="now__detail" id="now-detail"></p>
+      </div>
+      <div class="actions" id="pause-actions"></div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="weekly-title">
+    <h2 id="weekly-title">Sunday to Thursday</h2>
+    <p>The same hours every week. Friday and Saturday follow Shabbat, set below.</p>
+    <div class="grid" id="weekly"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="shabbat-title">
+    <h2 id="shabbat-title">Friday and Saturday</h2>
+    <p>Candle lighting and the end of Shabbat are worked out for this branch's location every week, so these times follow the seasons by themselves.</p>
+    <div class="rules">
+      <div>
+        <h3>Friday</h3>
+        <div class="inline"><label for="fri-open">Start taking orders at</label><input type="time" id="fri-open" data-f="fri.open"></div>
+        <div class="inline"><label for="fri-close">Stop taking orders</label><input type="number" id="fri-close" min="0" max="600" step="5" data-f="fri.closeBeforeCandle" data-num><span>minutes before candle lighting</span></div>
+        <p class="hint" id="fri-hint"></p>
+      </div>
+      <div>
+        <h3>Saturday night</h3>
+        <div class="inline"><label for="sat-open">Start taking orders</label><input type="number" id="sat-open" min="0" max="240" step="5" data-f="sat.openAfterHavdalah" data-num><span>minutes after Shabbat ends</span></div>
+        <div class="inline"><label for="sat-close">Stop taking orders at</label><input type="time" id="sat-close" data-f="sat.closeAt"></div>
+        <p class="hint" id="sat-hint"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="special-title">
+    <h2 id="special-title">Special days</h2>
+    <p>Yom Tov, bank holidays, a private event or a short day. These replace the normal hours for the dates you choose.</p>
+    <form class="special" id="special-form">
+      <div class="field"><label for="sp-from">From</label><input type="date" id="sp-from" required></div>
+      <div class="field"><label for="sp-to">To (optional)</label><input type="date" id="sp-to"></div>
+      <div class="field"><label for="sp-type">What happens</label>
+        <select id="sp-type"><option value="closed">Closed all day</option><option value="custom">Different hours</option></select></div>
+      <div class="field" id="sp-open-wrap" hidden><label for="sp-open">Opens</label><input type="time" id="sp-open" value="12:00"></div>
+      <div class="field" id="sp-close-wrap" hidden><label for="sp-close">Closes</label><input type="time" id="sp-close" value="18:00"></div>
+      <div class="field wide"><label for="sp-note">Note shown to customers</label><input type="text" id="sp-note" maxlength="60" placeholder="Closed for Pesach"></div>
+      <div class="wide"><button class="btn btn--yellow" type="submit">Add special day</button></div>
+    </form>
+    <ul class="slist" id="slist"></ul>
+  </section>
+
+  <section class="panel" aria-labelledby="pv-title">
+    <h2 id="pv-title">What customers will see</h2>
+    <p>The next 14 days for this branch, after all the rules above.</p>
+    <div class="preview" id="preview"></div>
+  </section>
+
+  <p style="margin-top:32px"><button class="btn btn--quiet" id="reset" type="button">Reset to the starting hours</button></p>
+</main>
+<div class="saved" id="saved" role="status" aria-live="polite">Saved</div>
+
+<script src="assets/hours.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let cfg = HOURS.load(), br = 'gg', savedTimer;
+
+  const get = (o, p) => p.split('.').reduce((a, k) => a[k], o);
+  const set = (o, p, v) => { const ks = p.split('.'); const last = ks.pop(); ks.reduce((a, k) => a[k], o)[last] = v; };
+  const commit = () => { HOURS.save(cfg); flash(); paint(); };
+  function flash() { const s = $('saved'); s.classList.add('on'); clearTimeout(savedTimer); savedTimer = setTimeout(() => s.classList.remove('on'), 1400); }
+  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ---- build the weekly grid once per branch ---- */
+  function buildWeekly() {
+    const rows = [1, 2, 3, 4, 0].map(d => `
+      <span class="day">${HOURS.DAYS[d]}</span>
+      <div class="field"><input type="time" aria-label="${HOURS.DAYS[d]} opens" data-f="weekly.${d}.open"></div>
+      <div class="field"><input type="time" aria-label="${HOURS.DAYS[d]} closes" data-f="weekly.${d}.close"></div>
+      <label class="check"><input type="checkbox" data-f="weekly.${d}.closed" data-bool> Closed all day</label>`).join('');
+    $('weekly').innerHTML = `<span class="head">Day</span><span class="head">Opens</span><span class="head">Closes</span><span class="head"></span>` + rows;
+  }
+
+  /* ---- fill every control from the saved settings ---- */
+  function fill() {
+    const c = cfg[br];
+    document.querySelectorAll('[data-f]').forEach(el => {
+      const v = get(c, el.dataset.f);
+      if (el.type === 'checkbox') el.checked = !!v; else el.value = v;
+    });
+  }
+
+  /* ---- live parts ---- */
+  function paint() {
+    const c = cfg[br], st = HOURS.status(br);
+    $('now').dataset.open = st.open;
+    $('now-title-text').textContent = st.open ? 'Open now' : st.paused ? 'Orders paused' : 'Closed now';
+    $('now-detail').textContent = st.detail;
+    const paused = c.pausedUntil && Date.now() < c.pausedUntil;
+    $('pause-actions').innerHTML = paused
+      ? '<button class="btn btn--yellow" data-pause="0" type="button">Resume orders</button>'
+      : '<button class="btn" data-pause="30" type="button">Pause 30 min</button><button class="btn" data-pause="60" type="button">Pause 1 hour</button><button class="btn" data-pause="120" type="button">Pause 2 hours</button>';
+
+    const today = HOURS.nowLondon();
+    const fri = HOURS.addDays(today.y, today.m, today.d, (5 - today.dow + 7) % 7);
+    const sat = HOURS.addDays(fri.y, fri.m, fri.d, 1);
+    const f = HOURS.dayWindow(br, fri), s = HOURS.dayWindow(br, sat);
+    $('fri-hint').textContent = `Friday ${fri.d}: candle lighting ${HOURS.fmt(f.z.candle)}, so orders ${f.closed ? 'are off all day' : `${HOURS.fmt(f.open)} to ${HOURS.fmt(f.close)}`}.`;
+    $('sat-hint').textContent = `Saturday ${sat.d}: Shabbat ends ${HOURS.fmt(s.z.havdalah)}, so orders ${s.closed ? 'stay off (' + (s.note || 'closed').toLowerCase() + ')' : `${HOURS.fmt(s.open)} to ${HOURS.fmt(s.close)}`}.`;
+
+    $('slist').innerHTML = c.overrides.length ? [...c.overrides].sort((a, b) => a.from.localeCompare(b.from)).map(o => `
+      <li><div><strong>${o.from}${o.to && o.to !== o.from ? ' to ' + o.to : ''}</strong>
+        <small>${o.type === 'closed' ? 'Closed all day' : `Open ${o.open} to ${o.close}`}${o.note ? ' · ' + esc(o.note) : ''}</small></div>
+        <button class="btn btn--quiet" type="button" data-remove="${o.id}" aria-label="Remove ${o.from}">Remove</button></li>`).join('')
+      : '<li class="empty" style="background:none;padding:0">No special days yet.</li>';
+
+    const days = HOURS.upcoming(br, 14);
+    const row = (x, i) => {
+      const w = x.w, t = !w || w.closed ? 'Closed' : `${HOURS.fmt(w.open)} to ${HOURS.fmt(w.close)}`;
+      const sub = w && w.note ? w.note : x.dow === 5 && w ? `Candle lighting ${HOURS.fmt(w.z.candle)}` : x.dow === 6 && w ? `Shabbat ends ${HOURS.fmt(w.z.havdalah)}` : '';
+      return `<div class="pv"><span class="when ${i === 0 ? 'today' : ''}">${i === 0 ? 'Today' : x.label}</span><b>${t}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
+    };
+    $('preview').innerHTML = `<div>${days.slice(0, 7).map(row).join('')}</div><div>${days.slice(7).map((x, i) => row(x, i + 7)).join('')}</div>`;
+  }
+
+  /* ---- events ---- */
+  document.addEventListener('change', e => {
+    const el = e.target.closest('[data-f]'); if (!el) return;
+    let v = el.type === 'checkbox' ? el.checked : el.dataset.num !== undefined ? Math.max(0, Number(el.value) || 0) : el.value;
+    if (el.type === 'time' && !v) return;
+    set(cfg[br], el.dataset.f, v); commit();
+  });
+  $('pause-actions').addEventListener('click', e => {
+    const b = e.target.closest('[data-pause]'); if (!b) return;
+    const m = Number(b.dataset.pause); cfg[br].pausedUntil = m ? Date.now() + m * 60000 : null; commit();
+  });
+  $('seg').addEventListener('click', e => {
+    const b = e.target.closest('button[data-branch]'); if (!b) return;
+    br = b.dataset.branch; $('seg').dataset.branch = br;
+    $('seg').querySelectorAll('button').forEach(x => x.setAttribute('aria-checked', x === b));
+    fill(); paint();
+  });
+  $('sp-type').addEventListener('change', () => { const c = $('sp-type').value === 'custom'; $('sp-open-wrap').hidden = $('sp-close-wrap').hidden = !c; });
+  $('special-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const from = $('sp-from').value, to = $('sp-to').value, type = $('sp-type').value;
+    if (!from || (to && to < from)) { $('sp-to').setCustomValidity('The end date must be on or after the start date.'); $('sp-to').reportValidity(); return; }
+    $('sp-to').setCustomValidity('');
+    const o = { id: String(Date.now()), from, to: to || '', type, note: $('sp-note').value.trim() };
+    if (type === 'custom') { o.open = $('sp-open').value; o.close = $('sp-close').value; if (o.close <= o.open) { $('sp-close').setCustomValidity('Closing time must be after opening time.'); $('sp-close').reportValidity(); return; } $('sp-close').setCustomValidity(''); }
+    cfg[br].overrides.push(o); e.target.reset(); $('sp-type').dispatchEvent(new Event('change')); commit();
+  });
+  $('slist').addEventListener('click', e => {
+    const b = e.target.closest('[data-remove]'); if (!b) return;
+    cfg[br].overrides = cfg[br].overrides.filter(o => o.id !== b.dataset.remove); commit();
+  });
+  $('reset').addEventListener('click', () => { if (!confirm('Put both branches back to the starting hours? Your changes and special days will be lost.')) return; HOURS.reset(); cfg = HOURS.load(); fill(); commit(); });
+  window.addEventListener('storage', () => { cfg = HOURS.load(); fill(); paint(); });
+
+  buildWeekly(); fill(); paint(); setInterval(paint, 30000);
+})();
+</script>
+</body>
+</html>
