@@ -10,6 +10,7 @@
 :root {
   --ink: #0f0f0e; --ink-2: #181816; --line: rgb(255 255 255 / .12);
   --text: #f4f3ee; --text-dim: #b9b8b0; --yellow: #ffd60a; --yellow-ink: #1a1500;
+  --green: #0f9d58; --green-bright: #3ddc97; --green-deep: #0a6a3c; --green-wash: rgb(15 157 88 / .13);
   --radius-panel: 28px;
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   --spring: linear(0, 0.0658, 0.2149, 0.3929, 0.5659, 0.7152, 0.8333, 0.9197, 0.9779, 1.0133, 1.0316, 1.0381, 1.0372, 1.0322, 1.0255, 1.0187, 1.0126, 1.0077, 1.004, 1.0015, 0.9998, 0.999, 0.9986, 0.9985, 0.9987, 0.9989, 0.9992, 0.9994, 0.9996, 0.9998, 0.9999, 1, 1, 1);
@@ -46,7 +47,7 @@ h2 { margin: 0 0 4px; font-size: 1.5rem; letter-spacing: -.03em; }
 
 .now { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
 .lamp { display: inline-block; width: 10px; height: 10px; margin-right: 10px; border-radius: 50%; background: #6b6a63; }
-.now[data-open="true"] .lamp { background: #34d058; box-shadow: 0 0 0 4px rgb(52 208 88 / .18); }
+.now[data-open="true"] .lamp { background: var(--green-bright); box-shadow: 0 0 0 4px rgb(61 220 151 / .2); }
 .now__title { font-size: 1.25rem; font-weight: 600; letter-spacing: -.02em; }
 .now__detail { margin: 2px 0 0 20px; color: var(--text-dim); }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -85,6 +86,21 @@ select { appearance: none; padding-right: 16px; }
 .pv .when { font-weight: 600; }
 .pv .when.today { color: var(--yellow); }
 .pv small { grid-column: 2; color: var(--text-dim); }
+.deal-ed { padding: 20px 0; display: grid; gap: 14px; }
+.deal-ed + .deal-ed { border-top: 1px solid var(--line); }
+.deal-ed__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+.deal-ed__head strong { font-size: 1.125rem; letter-spacing: -.02em; }
+.state { padding: 4px 10px; border-radius: 6px; font-size: .8125rem; font-weight: 600; background: rgb(255 255 255 / .08); color: var(--text-dim); }
+.state.on { background: var(--green-deep); color: #fff; }
+.days { display: flex; flex-wrap: wrap; gap: 6px; }
+.daypill { position: relative; }
+.daypill input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.daypill span { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); color: var(--text-dim); font-weight: 600; font-size: .9375rem; background: rgb(255 255 255 / .05); transition: background-color .2s, color .2s; }
+.daypill input:checked + span { background: var(--yellow); color: var(--yellow-ink); border-color: transparent; }
+.daypill input:focus-visible + span { outline: 3px solid var(--yellow); outline-offset: 3px; }
+.deal-ed__row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end; }
+.deal-ed__row .field { min-width: 150px; }
+.deal-ed__row .grow { flex: 1 1 280px; }
 .saved { position: fixed; left: 50%; bottom: 24px; translate: -50% 0; padding: 12px 20px; border-radius: 999px; background: rgb(36 36 33 / .9); border: 1px solid var(--line); font-weight: 500; opacity: 0; transform: translateY(10px); transition: opacity .25s, transform .4s var(--spring); pointer-events: none; }
 .saved.on { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -161,17 +177,24 @@ select { appearance: none; padding-right: 16px; }
     <ul class="slist" id="slist"></ul>
   </section>
 
+  <section class="panel" aria-labelledby="deals-title">
+    <h2 id="deals-title">Deals</h2>
+    <p>Choose the days, branches and dates each deal runs. The website shows today's deals, shows a welcome note for the best one, and greys out the rest with the days they run. These settings apply to both branches.</p>
+    <div id="deals-list"></div>
+  </section>
+
   <section class="panel" aria-labelledby="pv-title">
     <h2 id="pv-title">What customers will see</h2>
     <p>The next 14 days for this branch, after all the rules above.</p>
     <div class="preview" id="preview"></div>
   </section>
 
-  <p style="margin-top:32px"><button class="btn btn--quiet" id="reset" type="button">Reset to the starting hours</button></p>
+  <p style="margin-top:32px"><button class="btn btn--quiet" id="reset" type="button">Reset hours and deals to the starting settings</button></p>
 </main>
 <div class="saved" id="saved" role="status" aria-live="polite">Saved</div>
 
 <script src="assets/hours.js"></script>
+<script src="assets/deals.js"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
@@ -266,10 +289,59 @@ select { appearance: none; padding-right: 16px; }
     const b = e.target.closest('[data-remove]'); if (!b) return;
     cfg[br].overrides = cfg[br].overrides.filter(o => o.id !== b.dataset.remove); commit();
   });
-  $('reset').addEventListener('click', () => { if (!confirm('Put both branches back to the starting hours? Your changes and special days will be lost.')) return; HOURS.reset(); cfg = HOURS.load(); fill(); commit(); });
+  $('reset').addEventListener('click', () => { if (!confirm('Put hours and deals back to the starting settings? Your changes and special days will be lost.')) return; HOURS.reset(); DEALS.reset(); deals = DEALS.load(); buildDeals(); cfg = HOURS.load(); fill(); commit(); });
   window.addEventListener('storage', () => { cfg = HOURS.load(); fill(); paint(); });
 
-  buildWeekly(); fill(); paint(); setInterval(paint, 30000);
+  /* ---- deals ---- */
+  let deals = DEALS.load();
+  const names = { gg: 'Golders Green', edgware: 'Edgware' };
+  function summary(d) {
+    const where = d.branches.length === 2 ? 'both branches' : d.branches.length ? names[d.branches[0]] : 'no branch';
+    const dates = d.from || d.to ? `, ${d.from ? 'from ' + d.from : ''}${d.from && d.to ? ' ' : ''}${d.to ? 'until ' + d.to : ''}` : '';
+    return `${DEALS.daysLabel(d.days)}, ${where}, ${DEALS.modeLabel(d.mode)}${dates}`;
+  }
+  function stateFor(d) {
+    const on = Object.keys(names).filter(b => DEALS.isActive(d, b));
+    return on.length ? `Running today at ${on.map(b => names[b]).join(' and ')}` : 'Not running today';
+  }
+  function buildDeals() {
+    $('deals-list').innerHTML = deals.map((d, i) => `
+      <div class="deal-ed" data-i="${i}">
+        <div class="deal-ed__head"><strong>${esc(d.name)}</strong>
+          <span><span class="state ${DEALS.ALL && stateFor(d) !== 'Not running today' ? 'on' : ''}" data-state>${stateFor(d)}</span></span>
+          <label class="check"><input type="checkbox" data-k="enabled" ${d.enabled ? 'checked' : ''}> Switched on</label></div>
+        <div class="days" role="group" aria-label="${esc(d.name)} days">
+          ${[1, 2, 3, 4, 5, 6, 0].map(n => `<label class="daypill"><input type="checkbox" data-day="${n}" ${d.days.includes(n) ? 'checked' : ''}><span>${HOURS.SHORT[n]}</span></label>`).join('')}
+        </div>
+        <div class="deal-ed__row">
+          <label class="check"><input type="checkbox" data-branch="gg" ${d.branches.includes('gg') ? 'checked' : ''}> Golders Green</label>
+          <label class="check"><input type="checkbox" data-branch="edgware" ${d.branches.includes('edgware') ? 'checked' : ''}> Edgware</label>
+          <div class="field"><label for="m${i}">Order type</label><select id="m${i}" data-k="mode">
+            ${['both', 'collection', 'delivery'].map(m => `<option value="${m}" ${d.mode === m ? 'selected' : ''}>${m === 'both' ? 'Collection and delivery' : m === 'collection' ? 'Collection only' : 'Delivery only'}</option>`).join('')}</select></div>
+          <div class="field"><label for="f${i}">Starts (optional)</label><input type="date" id="f${i}" data-k="from" value="${d.from}"></div>
+          <div class="field"><label for="t${i}">Ends (optional)</label><input type="date" id="t${i}" data-k="to" value="${d.to}"></div>
+        </div>
+        <div class="deal-ed__row">
+          <div class="field grow"><label for="c${i}">Welcome note on the website</label><input type="text" id="c${i}" data-k="chip" maxlength="70" value="${esc(d.chip)}" placeholder="Short and specific"></div>
+          <label class="check"><input type="checkbox" data-k="showChip" ${d.showChip ? 'checked' : ''}> Show as the welcome note</label>
+        </div>
+        <p class="hint" data-sum>${summary(d)}</p>
+      </div>`).join('');
+  }
+  $('deals-list').addEventListener('change', e => {
+    const card = e.target.closest('.deal-ed'); if (!card) return;
+    const d = deals[+card.dataset.i], t = e.target;
+    if (t.dataset.day !== undefined) { const n = +t.dataset.day; d.days = t.checked ? [...new Set([...d.days, n])] : d.days.filter(x => x !== n); }
+    else if (t.dataset.branch) d.branches = t.checked ? [...new Set([...d.branches, t.dataset.branch])] : d.branches.filter(x => x !== t.dataset.branch);
+    else if (t.type === 'checkbox') d[t.dataset.k] = t.checked;
+    else d[t.dataset.k] = t.value;
+    DEALS.save(deals); flash();
+    card.querySelector('[data-sum]').textContent = summary(d);
+    const st = card.querySelector('[data-state]'); st.textContent = stateFor(d); st.classList.toggle('on', stateFor(d) !== 'Not running today');
+  });
+  window.addEventListener('storage', () => { deals = DEALS.load(); buildDeals(); });
+
+  buildWeekly(); fill(); paint(); buildDeals(); setInterval(paint, 30000);
 })();
 </script>
 </body>

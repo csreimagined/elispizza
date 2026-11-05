@@ -22,6 +22,10 @@
   --display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;   /* street-sign headings */
   --paper: #efede6; --paper-ink: #1b1b18;                                                /* receipt */
   --radius-sign: 6px;                                                                    /* small rectangular signs and tags */
+  --green: #0f9d58;        /* third colour: New York street-sign green, accents only */
+  --green-bright: #3ddc97; /* on dark: lamps, small highlights */
+  --green-deep: #0a6a3c;   /* sign backgrounds, carries white text (6.9:1) */
+  --green-wash: rgb(15 157 88 / .13);
   --ink: #0f0f0e;          /* page */
   --ink-2: #181816;        /* raised surface */
   --line: rgb(255 255 255 / .12);
@@ -161,7 +165,7 @@ a { color: inherit; text-decoration: none; }
 .seg button[aria-checked="true"] { color: var(--text); }
 .status { display: flex; align-items: center; gap: 12px; margin: 16px 4px 4px; min-height: 48px; }
 .status__lamp { flex: none; width: 10px; height: 10px; border-radius: 50%; background: #6b6a63; transition: background-color .3s; }
-.status[data-open="true"] .status__lamp { background: #34d058; box-shadow: 0 0 0 4px rgb(52 208 88 / .18); }
+.status[data-open="true"] .status__lamp { background: var(--green-bright); box-shadow: 0 0 0 4px rgb(61 220 151 / .2); }
 .status__text { transition: opacity .25s, translate .35s var(--ease-out); }
 .status__text.is-swapping { opacity: 0; translate: 0 6px; }
 .status__title { display: block; font-weight: 600; font-size: 1.0625rem; letter-spacing: -.01em; }
@@ -226,8 +230,9 @@ a { color: inherit; text-decoration: none; }
   border-radius: var(--radius-panel); background: var(--ink-2); border: 1px solid var(--line);
 }
 .deal--hot { background: var(--yellow); color: var(--yellow-ink); border-color: transparent; }
-.deal__tag { align-self: start; padding: 5px 10px; border-radius: var(--radius-sign); font-family: var(--display); text-transform: uppercase; letter-spacing: .04em; font-size: 1rem; font-weight: 700; background: rgb(255 255 255 / .12); }
-.deal--hot .deal__tag { background: rgb(26 21 0 / .12); }
+.sign, .deal__tag { align-self: start; display: inline-block; padding: 5px 10px; border-radius: var(--radius-sign); font-family: var(--display); text-transform: uppercase; letter-spacing: .05em; font-size: 1rem; font-weight: 700; line-height: 1.1; color: #fff; background: var(--green-deep); box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / .55); }
+.deal--hot .deal__tag { background: var(--yellow-ink); box-shadow: none; }
+.deal--later { opacity: .62; }
 .deal h4 { margin: 0 0 8px; font-family: var(--display); text-transform: uppercase; font-weight: 800; font-size: 1.875rem; letter-spacing: .01em; line-height: 1; }
 .deal p { margin: 0; color: var(--text-dim); font-size: .9375rem; }
 .deal--hot p { color: rgb(26 21 0 / .78); }
@@ -310,7 +315,7 @@ a { color: inherit; text-decoration: none; }
 .receipt__foot { margin: 16px 0 0; text-align: center; opacity: .72; }
 
 /* a gentle suggestion under the receipt, one at a time, easy to wave away */
-.nudge { padding: 16px 18px; border-radius: 20px; background: rgb(255 255 255 / .07); border: 1px solid var(--line); }
+.nudge { padding: 16px 18px; border-radius: 20px; background: var(--green-wash); border: 1px solid rgb(61 220 151 / .3); }
 .nudge p { margin: 0 0 12px; font-size: .9375rem; }
 .nudge__row { display: flex; flex-wrap: wrap; gap: 8px; }
 .nudge .btn { height: 40px; padding: 0 16px; font-size: .875rem; }
@@ -327,6 +332,25 @@ a { color: inherit; text-decoration: none; }
 }
 [popover].toast:popover-open { opacity: 1; transform: none; }
 @starting-style { [popover].toast:popover-open { opacity: 0; transform: translateY(12px); } }
+
+/* welcome chip: one deal that runs today, shown once per day, easy to dismiss */
+.chip {
+  position: fixed; z-index: 34; left: clamp(16px, 3vw, 32px); bottom: 24px; max-width: min(460px, calc(100vw - 32px));
+  display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 18px; border-radius: var(--radius-panel);
+  background: rgb(24 24 22 / .82); border: 1px solid var(--line); box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 20px 50px rgb(0 0 0 / .5);
+  backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+  visibility: hidden; opacity: 0; translate: 0 24px; pointer-events: none;
+  transition: translate .5s var(--spring), opacity .25s, visibility 0s .5s;
+}
+.chip.on { visibility: visible; opacity: 1; translate: 0 0; pointer-events: auto; transition: translate .5s var(--spring), opacity .25s, visibility 0s; }
+.chip__text { margin: 0; font-size: .9375rem; line-height: 1.35; }
+.chip__text strong { display: block; font-weight: 600; }
+.chip .btn { height: 40px; padding: 0 16px; font-size: .875rem; flex: none; }
+.chip__x { flex: none; width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; color: var(--text-dim); font: 400 1.5rem/1 var(--font); cursor: pointer; }
+.chip__x:hover { color: var(--text); background: rgb(255 255 255 / .08); }
+.has-chip [popover].toast { inset-block-end: 104px; }
+@media (min-width: 900px) { .has-chip [popover].toast { inset-block-end: 28px; } }
+@media (max-width: 767px) { .chip { right: 16px; left: 16px; max-width: none; bottom: 16px; } }
 
 /* check strip, used twice, like the tile border of a slice shop */
 .checks { height: 22px; background: repeating-conic-gradient(rgb(255 255 255 / .16) 0 25%, transparent 0 50%) 0 0 / 22px 22px; }
@@ -527,6 +551,13 @@ a { color: inherit; text-decoration: none; }
   </section>
 </main>
 
+<div class="chip" id="chip" role="status" aria-live="polite">
+  <span class="sign" id="chip-sign">Today</span>
+  <p class="chip__text" id="chip-text"></p>
+  <button type="button" class="btn btn--yellow" id="chip-go">See deal</button>
+  <button type="button" class="chip__x" id="chip-x" aria-label="Dismiss for today">×</button>
+</div>
+
 <dialog class="drawer" id="drawer" aria-labelledby="drawer-title">
   <div class="drawer__head">
     <div>
@@ -543,6 +574,7 @@ a { color: inherit; text-decoration: none; }
 <div class="toast" id="toast" popover="manual" role="status" aria-live="polite"></div>
 
 <script src="assets/hours.js"></script>
+<script src="assets/deals.js"></script>
 <script src="assets/menu.js"></script>
 <script>
 /* ==========================================================================
@@ -725,24 +757,35 @@ window.addEventListener('storage', () => { renderHours(); render(false); });
     : it.price == null ? '' : `<span class="price">${it.from ? '<small>from</small>' : ''}${money(it.price)}</span>`;
   const actionHTML = it => {
     const dis = status.open ? '' : ' aria-disabled="true"';
+    if (it.sched) return `<span class="off">${it.sched}</span>`;
     if (it.off) return '<span class="off">Unavailable today</span>';
     if (it.choose) return `<button type="button" class="btn btn--glass btn--sm" data-choose="${it.id}"${dis}>Choose</button>`;
     return `<button type="button" class="add" data-add="${it.id}"${dis} aria-label="Add ${it.name}, ${money(it.price)}">+</button>`;
   };
 
+  /* Offers follow their schedule: hide ones this branch never runs, grey the ones not running today */
+  function scheduleMark(it) {
+    const d = DEALS.find(it.id); if (!d) return true;
+    const why = DEALS.whyNot(d, current);
+    if (why === 'off') return false;
+    if (why) { it.sched = why; return true; }
+    if (d.days.length < 7) it.tag = 'Today';
+    return true;
+  }
   function renderMenu() {
     const q = query.trim().toLowerCase();
     byId = new Map();
     let html = '', tabHTML = '';
     for (const [cid, cname] of CATEGORIES) {
       const items = MENU.filter(r => r[0] === cid).map(r => resolve(r, current)).filter(Boolean)
-        .filter(it => !q || (it.name + ' ' + it.desc).toLowerCase().includes(q));
+        .filter(it => !q || (it.name + ' ' + it.desc).toLowerCase().includes(q))
+        .filter(it => cid !== 'deals' || scheduleMark(it));
       if (!items.length) continue;
       items.forEach(it => byId.set(it.id, it));
       tabHTML += `<a href="#cat-${cid}" data-cat="${cid}">${cname}</a>`;
       const inner = cid === 'deals'
         ? `<div class="deals">${items.map(it => `
-            <article class="deal${it.tag === '15% off' ? ' deal--hot' : ''}">
+            <article class="deal${it.tag === '15% off' ? ' deal--hot' : ''}${it.sched ? ' deal--later' : ''}">
               <div>${it.tag ? `<span class="deal__tag">${it.tag}</span>` : '<span></span>'}</div>
               <div><h4>${it.name}</h4><p>${it.desc}</p></div>
               <div class="deal__foot">${priceHTML(it) || '<span></span>'}${actionHTML(it)}</div>
@@ -881,14 +924,43 @@ window.addEventListener('storage', () => { renderHours(); render(false); });
     status = statusFor(current);
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduce) body.classList.add('is-swapping-menu');
-    setTimeout(() => { renderMenu(); renderBanner(); renderBasket(); body.classList.remove('is-swapping-menu'); }, reduce ? 0 : 150);
+    setTimeout(() => { renderMenu(); renderBanner(); renderBasket(); renderChip(); body.classList.remove('is-swapping-menu'); }, reduce ? 0 : 150);
   });
   document.addEventListener('statuschange', e => {
     const was = status.open; status = e.detail;
-    if (was !== status.open) { renderMenu(); renderBanner(); renderBasket(); }
+    if (was !== status.open) { renderMenu(); renderBanner(); renderBasket(); renderChip(); }
   });
 
-  renderMenu(); renderBanner(); renderBasket();
+  /* Welcome chip */
+  const chip = $('chip'), CHIP_KEY = 'elis.chip.v1';
+  let armed = false;
+  const todayKey = () => { const n = HOURS.nowLondon(); return HOURS.addDays(n.y, n.m, n.d, 0).key; };
+  const chipId = d => `${todayKey()}|${current}|${d.id}`;
+  const dismissedList = () => { try { return JSON.parse(localStorage.getItem(CHIP_KEY) || '[]').filter(k => k.startsWith(todayKey())); } catch (e) { return []; } };
+  function chipDeal() {
+    if (!status.open) return null;
+    return DEALS.active(current).filter(d => d.showChip && d.chip && !dismissedList().includes(chipId(d)))
+      .sort((a, b) => a.days.length - b.days.length)[0] || null;      // a deal that runs on fewer days wins
+  }
+  function renderChip() {
+    const d = armed ? chipDeal() : null;
+    chip.classList.toggle('on', !!d);
+    document.body.classList.toggle('has-chip', !!d);
+    if (!d) return;
+    $('chip-sign').textContent = d.days.length < 7 ? 'Today' : 'Deal';
+    $('chip-text').innerHTML = `<strong>${d.name}</strong>${d.chip}`;
+    chip.dataset.deal = d.id;
+  }
+  $('chip-x').addEventListener('click', () => {
+    const d = DEALS.find(chip.dataset.deal); if (!d) return;
+    try { localStorage.setItem(CHIP_KEY, JSON.stringify([...dismissedList(), chipId(d)])); } catch (e) { /* ignore */ }
+    renderChip();
+  });
+  $('chip-go').addEventListener('click', () => { document.getElementById('cat-deals')?.scrollIntoView(); chip.classList.remove('on'); document.body.classList.remove('has-chip'); });
+  new IntersectionObserver((en, ob) => { if (en.some(x => x.isIntersecting)) { armed = true; renderChip(); ob.disconnect(); } }, { threshold: .15 }).observe($('menu'));
+  window.addEventListener('storage', () => { renderMenu(); renderChip(); });
+
+  renderMenu(); renderBanner(); renderBasket(); renderChip();
 })();
 </script>
 </body>
