@@ -315,7 +315,7 @@ a { color: inherit; text-decoration: none; }
 .receipt__foot { margin: 16px 0 0; text-align: center; opacity: .72; }
 
 /* a gentle suggestion under the receipt, one at a time, easy to wave away */
-.nudge { padding: 16px 18px; border-radius: 20px; background: var(--green-wash); border: 1px solid rgb(61 220 151 / .3); }
+.nudge { padding: 2px 0 2px 16px; border-left: 3px solid var(--green-bright); }   /* a note under the receipt, not another box */
 .nudge p { margin: 0 0 12px; font-size: .9375rem; }
 .nudge__row { display: flex; flex-wrap: wrap; gap: 8px; }
 .nudge .btn { height: 40px; padding: 0 16px; font-size: .875rem; }
@@ -368,7 +368,9 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 767px) { .has-slice .slice { left: 20px; right: 20px; width: auto; bottom: auto; height: 38dvh; } }
 
 /* ---------- Below the hero: opening hours ---------- */
-.hours { padding: clamp(72px, 12vw, 160px) clamp(20px, 5vw, 72px); background: var(--ink-2); }
+.hours { padding: 80px 20px; background: var(--ink-2); }
+@media (min-width: 768px) { .hours { padding: 128px 48px; } }
+@media (min-width: 1200px) { .hours { padding: 160px 72px; } }
 .hours__inner { max-width: 1100px; margin-inline: auto; }
 .hours h2 { margin: 0 0 40px; font-family: var(--display); text-transform: uppercase; font-size: clamp(2.6rem, 6vw, 4.75rem); line-height: .92; letter-spacing: .005em; font-weight: 800; }
 .hours__grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
