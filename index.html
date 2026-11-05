@@ -216,7 +216,7 @@ a { color: inherit; text-decoration: none; }
   margin: 20px 0 0; padding: 16px 22px; border-radius: var(--radius-panel); color: var(--text);
   background: rgb(255 255 255 / .06); border: 1px solid var(--line);
 }
-.cat { padding-top: 64px; scroll-margin-top: 24px; }
+.cat { padding-top: 64px; scroll-margin-top: 112px; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 .cat h3 { margin: 0 0 20px; font-family: var(--display); text-transform: uppercase; font-weight: 800; font-size: clamp(2.1rem, 4vw, 3.1rem); letter-spacing: .01em; line-height: 1; }
 .is-swapping-menu { opacity: 0; transition: opacity .15s; }
@@ -367,6 +367,16 @@ a { color: inherit; text-decoration: none; }
 .slice img { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media (max-width: 767px) { .has-slice .slice { left: 20px; right: 20px; width: auto; bottom: auto; height: 38dvh; } }
 
+/* ---------- Contact footer ---------- */
+.foot { padding: 64px 20px 80px; background: var(--ink); }
+@media (min-width: 768px) { .foot { padding: 80px 48px 96px; } }
+.foot__inner { max-width: 1100px; margin-inline: auto; display: grid; gap: 28px; }
+@media (min-width: 768px) { .foot__inner { grid-template-columns: 1.2fr 1fr 1fr; } }
+.foot h2 { margin: 0 0 8px; font-family: var(--display); text-transform: uppercase; font-weight: 800; font-size: 2.25rem; line-height: 1; }
+.foot p { margin: 0; color: var(--text-dim); }
+.foot a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.foot strong { display: block; color: var(--text); }
+
 /* ---------- Below the hero: opening hours ---------- */
 .hours { padding: 80px 20px; background: var(--ink-2); }
 @media (min-width: 768px) { .hours { padding: 128px 48px; } }
@@ -413,7 +423,9 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Small screens: single column, pizza above the copy ---------- */
 @media (max-width: 767px) {
-  .nav__links, .nav__cta { display: none; }
+  .nav__cta, .nav__more { display: none; }
+  .nav__links { gap: 0; }
+  .nav__links a { padding: 10px 12px; }
   .nav { padding-left: 14px; }
   .seg--wide { width: 100%; }
   .menu__tools, .field { width: 100%; }
@@ -446,9 +458,9 @@ a { color: inherit; text-decoration: none; }
   <nav aria-label="Main">
     <ul class="nav__links">
       <li><a href="#menu">Menu</a></li>
-      <li><a href="#deals">Deals</a></li>
-      <li><a href="#hours">Branches</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#cat-deals">Deals</a></li>
+      <li class="nav__more"><a href="#hours">Branches</a></li>
+      <li class="nav__more"><a href="#contact">Contact</a></li>
     </ul>
   </nav>
   <div class="nav__right">
@@ -552,6 +564,14 @@ a { color: inherit; text-decoration: none; }
     </div>
   </section>
 </main>
+
+<footer class="foot" id="contact">
+  <div class="foot__inner">
+    <div><h2>Get in touch</h2><p>Call us on <a href="tel:+442037615151">020 3761 5151</a>. Please call before ordering if you have an allergy.</p></div>
+    <p><strong>Golders Green</strong>2A Hoop Lane, NW11 8JS</p>
+    <p><strong>Edgware</strong>7 Edgwarebury Lane, HA8 8LH</p>
+  </div>
+</footer>
 
 <div class="chip" id="chip" role="status" aria-live="polite">
   <span class="sign" id="chip-sign">Today</span>
