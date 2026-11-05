@@ -16,6 +16,7 @@
    Shape rule: interactive = full pill, panels = 28px. Nothing else.
    Layers: nav 40, widget 30, hero copy 20, pizza 10. (no stray z-index)
    ========================================================================== */
+@font-face { font-family: "Figtree"; font-weight: 300 900; font-style: normal; font-display: swap; src: url(assets/fonts/figtree-latin.woff2) format("woff2"); }
 @font-face { font-family: "Barlow Condensed"; font-weight: 700; font-display: swap; src: url(assets/fonts/barlow-condensed-700.woff2) format("woff2"); }
 @font-face { font-family: "Barlow Condensed"; font-weight: 800; font-display: swap; src: url(assets/fonts/barlow-condensed-800.woff2) format("woff2"); }
 :root {
@@ -35,7 +36,7 @@
   --yellow-ink: #1a1500;   /* text on yellow, 13:1 */
   --radius-panel: 28px;
   --nav-h: 68px;
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --font: "Figtree", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   /* critically-ish damped spring, response ~0.7s, tiny overshoot */
   --spring: linear(0, 0.0658, 0.2149, 0.3929, 0.5659, 0.7152, 0.8333, 0.9197, 0.9779, 1.0133, 1.0316, 1.0381, 1.0372, 1.0322, 1.0255, 1.0187, 1.0126, 1.0077, 1.004, 1.0015, 0.9998, 0.999, 0.9986, 0.9985, 0.9987, 0.9989, 0.9992, 0.9994, 0.9996, 0.9998, 0.9999, 1, 1, 1);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
