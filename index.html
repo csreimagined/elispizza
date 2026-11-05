@@ -178,7 +178,11 @@ a { color: inherit; text-decoration: none; }
   border-radius: 50%; border: 1.5px dashed rgb(255 255 255 / .32); color: var(--text-dim);
   font-size: .6875rem; line-height: 1.2; font-weight: 500;
 }
-.cert img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #fff; }
+.cert img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+/* once the real certificate loads, drop the dashed placeholder circle */
+.cert.has-img { width: 88px; height: auto; border: 0; border-radius: 0; overflow: visible; }
+.cert.has-img span { display: none; }
+.cert.has-img img { position: static; height: auto; display: block; }
 
 /* ---------- Menu ---------- */
 .menu { padding: clamp(64px, 10vw, 128px) clamp(20px, 5vw, 72px) clamp(56px, 8vw, 104px); }
@@ -475,7 +479,7 @@ a { color: inherit; text-decoration: none; }
 
       <div class="cert" aria-label="Kosher certificate placeholder">
         <span>Kosher certificate</span>
-        <img src="assets/kosher.png" alt="London Beth Din kosher certificate" onerror="this.remove()">
+        <img src="assets/kosher.png" alt="Kosher certificate, London Beth Din (K LBD), Chalav Yisrael" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()">
       </div>
 
       <!-- Pizza. Placeholder is drawn in code. Drop a top-down photo at assets/hero-pizza.png
